@@ -36,5 +36,3 @@ jobs:
                 "commit_sha": "${{ github.sha }}"
               }
             }'  
-            }'
-echo "SecOps repository triggered successfully"
