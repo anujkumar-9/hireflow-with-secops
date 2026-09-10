@@ -1,9 +1,12 @@
 FROM node:22-alpine AS build
 
+RUN apk update && apk upgrade --no-cache
+
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+
+RUN npm ci
 
 COPY . .
 
@@ -13,9 +16,15 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 
+# =========================
+# Final Runtime Image
+# =========================
 FROM nginx:alpine
 
+RUN apk update && apk upgrade --no-cache
+
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
